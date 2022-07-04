@@ -1,6 +1,8 @@
 #include <vector>
 #include "matrix.h"
 #include <stdlib.h>
+#include <memory>
+#include <iostream>
 
 namespace Matrix
 {
@@ -12,7 +14,30 @@ namespace Matrix
         x = vecs[0].size();
     }
 
-    Matrix Matrix::operator + (Matrix &otherMatrix){
+    Matrix::~Matrix(){
+	    std::cout << "Deleting matrix" << std::endl;
+    }
+
+    Matrix::Matrix(int y, int x, char mode) {
+	this->x = x;
+	this->y = y;
+        for (int i = 0; i < y; i++){
+            std::vector<float> vec;
+            for (int j = 0; j < x; j++){
+		if (mode == 'r')
+                	vec.push_back((float) rand()/RAND_MAX);
+		else if (mode == '0')
+			vec.push_back(0);
+		else if (mode == '1')
+			vec.push_back(1);
+            }
+            _matrix.push_back(vec);
+        }
+   
+
+    }
+
+    std::unique_ptr<Matrix> Matrix::operator + (Matrix &otherMatrix){
         vecOfVecs newVecOfVecs = _matrix;
         for (int i = 0; i < y; i++){
             for (int j = 0; j < x; j++){
@@ -20,7 +45,7 @@ namespace Matrix
             }
         }
 
-        return newVecOfVecs;
+        return std::make_unique<Matrix>(newVecOfVecs);
     }
 
     Matrix Matrix::T(){
@@ -43,19 +68,5 @@ namespace Matrix
             output.push_back('\n');
         }
         return output;
-    }
-
-    Matrix& Random(int x, int y){
-        vecOfVecs newVec;
-
-        for (int i = 0; i < y; i++){
-            std::vector<float> vec;
-            for (int j = 0; j < x; j++){
-                vec.push_back(1.0 / (rand() % 100 + 1));
-            }
-            newVec.push_back(vec);
-        }
-        Matrix* newMat = new Matrix(newVec);
-        return (*newMat);
-    }
+	}    
 }

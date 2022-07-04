@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <memory>
 
 
 namespace Matrix{
@@ -10,7 +11,11 @@ namespace Matrix{
         public:
             Matrix(vecOfVecs const& vecs);
 
-            Matrix operator + (Matrix &otherMatrix);
+	    ~Matrix();
+
+	    Matrix(int y, int x, char mode);
+
+	    std::unique_ptr<Matrix> operator + (Matrix &otherMatrix);
 
             Matrix T();
 
@@ -23,7 +28,5 @@ namespace Matrix{
             vecOfVecs _t;
             int x, y;
     };
-
-    Matrix& Random(int y, int x);
 }
 
